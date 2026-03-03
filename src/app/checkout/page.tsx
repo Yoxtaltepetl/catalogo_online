@@ -32,7 +32,7 @@ export default function CheckoutPage() {
                 countryCode: language === 'en' ? '+1' : '+52'
             }));
         }
-    }, [language]);
+    }, [language, formData.phone]);
 
     useEffect(() => {
         setMounted(true);

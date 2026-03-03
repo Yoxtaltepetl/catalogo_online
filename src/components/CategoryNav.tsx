@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { categories } from "@/data/menu";
 import { useLanguage } from "@/context/LanguageContext";

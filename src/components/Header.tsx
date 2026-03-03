@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const mobileNavItems = [
     { tKey: "nav.home", href: "/", icon: Home },
