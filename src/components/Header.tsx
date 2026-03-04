@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, Bell, Home, Pizza, Utensils, Coffee, IceCreamBowl, UtensilsCrossed, Package, Info } from "lucide-react";
+import { ShoppingCart, Bell, Home, Pizza, Utensils, Coffee, IceCreamBowl, UtensilsCrossed, Package, Info } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -57,22 +57,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="sticky top-0 z-40 w-full bg-background/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-border py-4 px-6 md:px-10 flex items-center justify-between">
-                {/* Search Bar */}
-                <div className="flex-1 max-w-xl">
-                    <div className="relative flex items-center w-full h-12 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                        <div className="grid place-items-center h-full w-12 text-slate-400 pl-2">
-                            <Search className="h-5 w-5" />
-                        </div>
-                        <input
-                            className="peer h-full w-full outline-none text-sm text-slate-700 dark:text-slate-200 bg-transparent pr-4"
-                            type="text"
-                            id="search"
-                            placeholder="Buscar en el menú..."
-                        />
-                    </div>
-                </div>
-
+            <header className="sticky top-0 z-40 w-full bg-background/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-border py-4 px-6 md:px-10 flex items-center justify-end">
                 {/* Actions */}
                 <div className="flex items-center gap-4 lg:gap-6 ml-4">
                     <LanguageSwitcher />

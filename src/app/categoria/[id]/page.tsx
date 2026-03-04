@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { categories, products, Product } from "@/data/menu";
 import ProductCard from "@/components/ProductCard";
@@ -12,6 +12,94 @@ export default function CategoryPage() {
     const router = useRouter();
     const categoryId = params.id as string;
     const { language, t } = useLanguage();
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const isDragging = useRef(false);
+    const startX = useRef(0);
+    const scrollLeft = useRef(0);
+    const hasDragged = useRef(false);
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (!scrollContainerRef.current) return;
+        isDragging.current = true;
+        hasDragged.current = false;
+        startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
+        scrollLeft.current = scrollContainerRef.current.scrollLeft;
+    };
+
+    const handleMouseLeave = () => {
+        isDragging.current = false;
+    };
+
+    const handleMouseUp = () => {
+        isDragging.current = false;
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging.current || !scrollContainerRef.current) return;
+        e.preventDefault();
+        hasDragged.current = true;
+        const x = e.pageX - scrollContainerRef.current.offsetLeft;
+        const walk = (x - startX.current) * 2;
+        scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
+    };
+
+    // Dictionary for translating tags
+    const tagTranslations: Record<string, { es: string; en: string }> = {
+        "Res": { es: "Res", en: "Beef" },
+        "Clásicas": { es: "Clásicas", en: "Classic" },
+        "Especiales": { es: "Especiales", en: "Specials" },
+        "Pollo": { es: "Pollo", en: "Chicken" },
+        "Picantes": { es: "Picantes", en: "Spicy" },
+        "Veganas": { es: "Veganas", en: "Vegan" },
+        "Saludables": { es: "Saludables", en: "Healthy" },
+        "Dulce": { es: "Dulce", en: "Sweet" },
+        "Gourmet": { es: "Gourmet", en: "Gourmet" },
+        "Doble/Triple": { es: "Doble/Triple", en: "Double/Triple" },
+        "Cerdo": { es: "Cerdo", en: "Pork" },
+        "Pescado": { es: "Pescado", en: "Fish" },
+        "Ligeras": { es: "Ligeras", en: "Light" },
+        "Carne": { es: "Carne", en: "Meat" },
+        "Vegetariana": { es: "Vegetariana", en: "Vegetarian" },
+        "Mixtos": { es: "Mixtos", en: "Mixed" },
+        "Especialidad": { es: "Especialidad", en: "Specialty" },
+        "Mariscos": { es: "Mariscos", en: "Seafood" },
+        "Fritos": { es: "Fritos", en: "Fried" },
+        "Refrescos": { es: "Refrescos", en: "Sodas" },
+        "Frías": { es: "Frías", en: "Cold" },
+        "Aguas Frescas": { es: "Aguas Frescas", en: "Fresh Waters" },
+        "Preparadas": { es: "Preparadas", en: "Prepared" },
+        "Cervezas": { es: "Cervezas", en: "Beers" },
+        "Alcohol": { es: "Alcohol", en: "Alcohol" },
+        "Malteadas": { es: "Malteadas", en: "Milkshakes" },
+        "Dulces": { es: "Dulces", en: "Sweets" },
+        "Café": { es: "Café", en: "Coffee" },
+        "Calientes": { es: "Calientes", en: "Hot" },
+        "Tartas": { es: "Tartas", en: "Pies" },
+        "Cítricos": { es: "Cítricos", en: "Citrus" },
+        "Pasteles": { es: "Pasteles", en: "Cakes" },
+        "Frutos Rojos": { es: "Frutos Rojos", en: "Berries" },
+        "Chocolate": { es: "Chocolate", en: "Chocolate" },
+        "Helados": { es: "Helados", en: "Ice Cream" },
+        "Tradicionales": { es: "Tradicionales", en: "Traditional" },
+        "Parejas": { es: "Parejas", en: "Couples" },
+        "Hamburguesas": { es: "Hamburguesas", en: "Burgers" },
+        "Familiar": { es: "Familiar", en: "Family" },
+        "Pizzas": { es: "Pizzas", en: "Pizzas" },
+        "Taquizas": { es: "Taquizas", en: "Taquizas" },
+        "Infantil": { es: "Infantil", en: "Kids" },
+        "Fiestas": { es: "Fiestas", en: "Parties" },
+        "Grandes": { es: "Grandes", en: "Large" },
+        "Individual": { es: "Individual", en: "Individual" },
+        "Ofertas": { es: "Ofertas", en: "Offers" },
+        "Botanas": { es: "Botanas", en: "Snacks" },
+        "Cerdo/Pollo": { es: "Cerdo/Pollo", en: "Pork/Chicken" },
+        "Tacos": { es: "Tacos", en: "Tacos" },
+    };
+
+    const getTranslatedTag = (tag: string) => {
+        return tagTranslations[tag]?.[language] || tag;
+    };
 
     const category = categories.find(c => c.id === categoryId);
     const categoryProducts = products.filter(p => p.categoryId === categoryId);
@@ -50,10 +138,21 @@ export default function CategoryPage() {
 
                 {/* Filter Pills */}
                 {availableTags.length > 0 && (
-                    <div className="flex flex-wrap gap-3 mb-8">
+                    <div
+                        ref={scrollContainerRef}
+                        onMouseDown={handleMouseDown}
+                        onMouseLeave={handleMouseLeave}
+                        onMouseUp={handleMouseUp}
+                        onMouseMove={handleMouseMove}
+                        className="flex overflow-x-auto gap-3 pb-4 mb-4 scrollbar-hide cursor-grab active:cursor-grabbing"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
                         <button
-                            onClick={() => setActiveFilter("Todas")}
-                            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm
+                            onClick={(e) => {
+                                if (hasDragged.current) e.preventDefault();
+                                else setActiveFilter("Todas");
+                            }}
+                            className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm
                                 ${activeFilter === "Todas"
                                     ? "bg-primary text-primary-foreground shadow-primary/30"
                                     : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
@@ -64,14 +163,17 @@ export default function CategoryPage() {
                         {availableTags.map(tag => (
                             <button
                                 key={tag}
-                                onClick={() => setActiveFilter(tag)}
-                                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm
+                                onClick={(e) => {
+                                    if (hasDragged.current) e.preventDefault();
+                                    else setActiveFilter(tag);
+                                }}
+                                className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm
                                 ${activeFilter === tag
                                         ? "bg-primary text-primary-foreground shadow-primary/30"
                                         : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
                                     }`}
                             >
-                                {tag}
+                                {getTranslatedTag(tag)}
                             </button>
                         ))}
                     </div>

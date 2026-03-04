@@ -31,7 +31,7 @@ export default function PromoCarousel() {
     const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + promos.length) % promos.length);
 
     return (
-        <section className="relative w-full max-w-7xl mx-auto mt-6 rounded-3xl h-[40vh] min-h-[350px] bg-slate-900 overflow-hidden group shadow-2xl px-4 md:px-0">
+        <section className="relative w-full max-w-7xl mx-auto mt-6 rounded-3xl h-[45vh] min-h-[420px] md:min-h-[380px] bg-slate-900 overflow-hidden group shadow-2xl">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
                 <Image
@@ -42,28 +42,28 @@ export default function PromoCarousel() {
                     className="object-cover opacity-60 animate-fade-in"
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30 md:to-transparent" />
             </div>
 
             {/* Content */}
-            <div className="relative h-full container mx-auto px-4 flex flex-col justify-center">
+            <div className="relative h-full container mx-auto px-6 md:px-12 flex flex-col justify-center pb-12 md:pb-0">
                 <div className="max-w-xl animate-slide-in-right">
                     <span className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4 shadow-lg shadow-primary/40">
                         {t('promo.title')}
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-md">
                         {currentPromo.name[language]}
                     </h2>
-                    <p className="text-lg text-slate-200 mb-6 drop-shadow">
+                    <p className="text-base md:text-lg text-slate-200 mb-6 drop-shadow line-clamp-3 md:line-clamp-none">
                         {currentPromo.description[language]}
                     </p>
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-wrap items-center gap-4 md:gap-6">
                         <span className="text-3xl font-extrabold text-amber-400 drop-shadow-md">
                             ${currentPromo.price.toFixed(2)}
                         </span>
                         <button
                             onClick={() => setSelectedProduct(currentPromo)}
-                            className="px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-full font-bold transition-all transform hover:scale-105 shadow-lg shadow-primary/30"
+                            className="px-6 md:px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-full font-bold transition-all transform hover:scale-105 shadow-lg shadow-primary/30"
                         >
                             {language === 'es' ? '¡Lo Quiero!' : 'I Want It!'}
                         </button>
