@@ -150,7 +150,6 @@ export default function CheckoutPage() {
                                             required
                                             type="tel"
                                             name="phone"
-                                            minLength={10}
                                             maxLength={10}
                                             value={formData.phone}
                                             onChange={handleChange}
