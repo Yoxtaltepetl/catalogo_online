@@ -13,7 +13,7 @@ export interface CheckoutData {
 }
 
 // Define the WhatsApp phone number here (include country code without + sign)
-const RESTAURANT_WHASTAPP_NUMBER = "2381953443"; // Example MX number
+const RESTAURANT_WHASTAPP_NUMBER = "+522381953443"; // Example MX number
 
 export function generateWhatsAppLink(cart: CartItem[], data: CheckoutData, language: 'es' | 'en'): string {
     let message = language === 'es' ? `*¡Hola! Quiero hacer un pedido para ${data.deliveryType === 'delivery' ? 'Envío a domicilio' : 'Recoger en sucursal'}*\n\n` : `*Hi! I want to place an order for ${data.deliveryType === 'delivery' ? 'Delivery' : 'Pickup'}*\n\n`;

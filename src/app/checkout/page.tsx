@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { generateWhatsAppLink, CheckoutData } from "@/lib/whatsapp";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { useToast } from "@/context/ToastContext";
 
 export default function CheckoutPage() {
     const { cart, cartTotal, clearCart } = useCart();
     const router = useRouter();
     const { language } = useLanguage();
+    const { addToast } = useToast();
 
     const [mounted, setMounted] = useState(false);
     const [formData, setFormData] = useState({
@@ -74,6 +76,12 @@ export default function CheckoutPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (formData.phone.length < 10) {
+            const errorMsg = language === 'es' ? "El número de teléfono debe tener 10 dígitos." : "Phone number must be 10 digits.";
+            addToast(errorMsg, "error");
+            return;
+        }
 
         const checkoutData: CheckoutData = {
             name: formData.name,
@@ -142,6 +150,8 @@ export default function CheckoutPage() {
                                             required
                                             type="tel"
                                             name="phone"
+                                            minLength={10}
+                                            maxLength={10}
                                             value={formData.phone}
                                             onChange={handleChange}
                                             className="w-full bg-transparent px-4 py-3 outline-none transition-all placeholder:text-slate-400"
